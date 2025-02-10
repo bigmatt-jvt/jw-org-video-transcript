@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "JW.org Video Transcript",
+  "version": "1.0.2",
+  "description": "Display a searchable transcript using VTT subtitles on JW.org videos.",
+  "content_scripts": [
+    {
+      "matches": ["https://www.jw.org/*"],
+      "js": ["contentScript.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "https://www.jw.org/*",
+    "https://*.jw-cdn.org/*"
+  ]
+}
