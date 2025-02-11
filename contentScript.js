@@ -262,9 +262,10 @@
 
             const line = document.createElement('span');
             line.appendChild(createTextWithItalics(cleanedText));
+            line.appendChild(document.createTextNode(' '));
             line.dataset.timestamp = timestamp;
             line.style.cursor = 'pointer';
-            line.style.paddingRight = '5px';
+            //line.style.paddingRight = '5px';
             line.style.textUnderlineOffset = '.4ex';
             line.style.transition = 'underline 0.3s ease';
             line.style.display = 'inline';
