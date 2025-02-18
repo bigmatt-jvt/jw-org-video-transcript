@@ -87,44 +87,59 @@
         const vttLines = vttText.split('\n');
         let timestamp = '';
         let text = '';
-
+    
         for (let line of vttLines) {
             line = line.trim();
-            if (/^\d{2}:\d{2}:\d{2}\.\d{3} -->/.test(line)) {
+            
+            // Match both timestamp formats
+            const timestampMatch = line.match(/^(\d{2}:)?\d{2}:\d{2}\.\d{3} --> (\d{2}:)?\d{2}:\d{2}\.\d{3}/);
+            
+            if (timestampMatch) {
                 if (timestamp && text) {
                     cues.push({ timestamp, text });
                     text = '';
                 }
+                // Extract just the starting timestamp
                 timestamp = line.split(' ')[0];
             } else if (line && !line.startsWith('WEBVTT')) {
                 text += (text ? ' ' : '') + line;
             }
         }
-
+    
         if (timestamp && text) {
             cues.push({ timestamp, text });
         }
-
+    
         return cues;
     }
 
     function startSync() {
         if (!videoElement) return;
-
+    
         videoElement.addEventListener('timeupdate', () => {
             const currentTime = videoElement.currentTime;
             let activeCue = null;
-
+    
             transcriptCache.forEach(({ timestamp }, index) => {
-                const [hours, minutes, seconds] = timestamp.split(':');
-                const cueTime = parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseFloat(seconds);
-
-                // Check if currentTime is greater than or equal to the cue time and less than the next cue time
+                const parts = timestamp.split(':').map(parseFloat);
+    
+                let cueTime;
+                if (parts.length === 3) {
+                    // HH:MM:SS.mmm format
+                    cueTime = parts[0] * 3600 + parts[1] * 60 + parts[2];
+                } else if (parts.length === 2) {
+                    // MM:SS.mmm format
+                    cueTime = parts[0] * 60 + parts[1];
+                } else {
+                    console.error("Invalid timestamp format:", timestamp);
+                    return;
+                }
+    
                 if (currentTime >= cueTime) {
                     activeCue = index;
                 }
             });
-
+    
             if (activeCue !== null) highlightLine(activeCue);
         });
     }
@@ -333,16 +348,20 @@
         }
     }
 
-    // Function to parse timestamp (HH:MM:SS.mmm --> seconds)
+    // Function to parse timestamp (HH:MM:SS.mmm or MM:SS.mmm --> seconds)
     function parseTimestamp(timestamp) {
-        const parts = timestamp.split(':');
+        const parts = timestamp.split(':').map(parseFloat);
+    
         if (parts.length === 3) {
-            const [hours, minutes, seconds] = parts;
-            const [sec, millis] = seconds.split('.');
-            const timeInSeconds = parseInt(hours, 10) * 3600 + parseInt(minutes, 10) * 60 + parseInt(sec, 10) + parseInt(millis, 10) / 1000;
-            return timeInSeconds;
+            // HH:MM:SS.mmm format
+            return parts[0] * 3600 + parts[1] * 60 + parts[2];
+        } else if (parts.length === 2) {
+            // MM:SS.mmm format (no hours)
+            return parts[0] * 60 + parts[1];
+        } else {
+            console.error("Invalid timestamp format:", timestamp);
+            return NaN;
         }
-        return NaN;  // Return NaN if the timestamp format is invalid
     }
 
     // Search functionality
