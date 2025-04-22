@@ -239,7 +239,7 @@
         controls.appendChild(closeButton);
 
         const resultsCount = document.createElement('span');
-        resultsCount.style.cssText = 'display: block; position: absolute; margin-left: 5px; width: 170px; text-align: right; font-size: 10px; margin-top: 11px;'
+        resultsCount.style.cssText = 'display: block; position: absolute; margin-left: 7px; width: 170px; text-align: right; font-size: 8px; margin-top: 20px;'
         searchBox.insertAdjacentElement('afterend', resultsCount); // Insert after the search box
 
         sidebar.appendChild(controls);
