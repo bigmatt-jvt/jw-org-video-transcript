@@ -21,6 +21,8 @@
         sidebar.style.bottom = '0';
         sidebar.style.overflowY = 'auto';
         controls.style.top = '-20px';
+        sidebar.style.borderTop = '1px solid #ccc';
+        sidebar.style.borderRight = '';
 
         // Add a spacer at the bottom of the content
         let spacer = document.getElementById('content-bottom-spacer');
@@ -30,6 +32,11 @@
         spacer.style.height = '1080px'; // Equal to sidebar height
         document.body.appendChild(spacer);
         }
+        // Remove margin-right to wrapper (if created)
+        const pageWrapper = document.getElementById('page-wrapper');
+        pageWrapper.style.transform = ''; // Reset position when sidebar is hidden
+        pageWrapper.style.width = '100%';
+
     } else {
         // Landscape mode: sidebar on the right side
         sidebar.style.bottom = '';
@@ -39,16 +46,22 @@
         sidebar.style.height = '100%';
         sidebar.style.overflowY = 'auto';
         controls.style.top = '-9px';
+        sidebar.style.borderTop = '';
+        sidebar.style.borderRight = '1px solid #ccc';
 
         // Remove the spacer when in landscape mode
         const spacer = document.getElementById('content-bottom-spacer');
         if (spacer) spacer.remove();
 
         // Apply margin-right to wrapper (if created)
-        const pageWrapper = createPageWrapper();
-        if (pageWrapper) {
-        pageWrapper.style.transform = 'translateX(440px)'; // Move the page content to the left by sidebar width
-        pageWrapper.style.width = 'calc(100% - 440px)'; // Move the page content to the left by sidebar width
+        const pageWrapper = document.getElementById('page-wrapper');
+        const isSidebarVisible = sidebar.style.display !== 'none';
+        if (isSidebarVisible) {
+            pageWrapper.style.transform = 'translateX(440px)'; // Move the page content to the left by sidebar width
+            pageWrapper.style.width = 'calc(100% - 440px)'; // Move the page content to the left by sidebar width
+        } else {
+            pageWrapper.style.transform = ''; // Reset position when sidebar is hidden
+            pageWrapper.style.width = '100%';
         }
     }
     }
@@ -224,7 +237,7 @@
                 sidebar.style.height = '50%';
                 sidebar.style.overflowY = 'auto';
                 sidebar.style.backgroundColor = '#fff';
-                sidebar.style.borderLeft = '1px solid #ccc';
+                sidebar.style.borderTop = '1px solid #ccc';
                 sidebar.style.padding = '20px';
                 sidebar.style.zIndex = 9999;
                 sidebar.style.fontFamily = 'NotoSans, sans-serif';
@@ -251,7 +264,7 @@
                 sidebar.style.height = '100%';
                 sidebar.style.overflowY = 'auto';
                 sidebar.style.backgroundColor = '#fff';
-                sidebar.style.borderLeft = '1px solid #ccc';
+                sidebar.style.borderRight = '1px solid #ccc';
                 sidebar.style.padding = '20px';
                 sidebar.style.zIndex = 9999;
                 sidebar.style.fontFamily = 'NotoSans, sans-serif';
