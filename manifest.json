@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "JW.org Video Transcript",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Display a searchable transcript using VTT subtitles on JW.org videos. What's new: Added mobile support (Android) with a responsive design that adjusts the transcript location to the screen orientation",
   "content_scripts": [
     {

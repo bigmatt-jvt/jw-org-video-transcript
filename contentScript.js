@@ -318,7 +318,7 @@
         };
 
         const scrollButton = document.createElement('button');
-        scrollButton.textContent = 'Scroll';
+        scrollButton.textContent = '▼';
         scrollButton.style.padding = '8px';
         scrollButton.classList.add('primaryButton');
         scrollButton.style.color = 'white';
@@ -334,7 +334,7 @@
         controls.appendChild(closeButton);
 
         const resultsCount = document.createElement('span');
-        resultsCount.style.cssText = 'display: block; position: absolute; right: 202px; text-align: right; font-size: 8px; bottom: 19px;'
+        resultsCount.style.cssText = 'display: block; position: absolute; right: 181px; text-align: right; font-size: 8px; bottom: 19px;'
         searchBox.insertAdjacentElement('afterend', resultsCount); // Insert after the search box
 
         sidebar.appendChild(controls);
