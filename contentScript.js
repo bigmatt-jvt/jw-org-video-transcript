@@ -3,6 +3,56 @@
 
     let selectedResults = []; // Array to track selected results
 
+    function isPortrait() {
+        return window.matchMedia('(orientation: portrait)').matches;
+      }
+
+    function monitorOrientation() {
+    const sidebar = document.getElementById('transcriptSidebar');
+    const controls = document.getElementById('transcriptSidebarControls');
+    if (!sidebar) return;
+
+    if (isPortrait()) {
+        // Portrait mode: sidebar at the bottom
+        sidebar.style.top = '';
+        sidebar.style.left = '';
+        sidebar.style.width = '';
+        sidebar.style.height = '50%';
+        sidebar.style.bottom = '0';
+        sidebar.style.overflowY = 'auto';
+        controls.style.top = '-20px';
+
+        // Add a spacer at the bottom of the content
+        let spacer = document.getElementById('content-bottom-spacer');
+        if (!spacer) {
+        spacer = document.createElement('div');
+        spacer.id = 'content-bottom-spacer';
+        spacer.style.height = '1080px'; // Equal to sidebar height
+        document.body.appendChild(spacer);
+        }
+    } else {
+        // Landscape mode: sidebar on the right side
+        sidebar.style.bottom = '';
+        sidebar.style.top = '-11px';
+        sidebar.style.left = '0';
+        sidebar.style.width = '440px';
+        sidebar.style.height = '100%';
+        sidebar.style.overflowY = 'auto';
+        controls.style.top = '-9px';
+
+        // Remove the spacer when in landscape mode
+        const spacer = document.getElementById('content-bottom-spacer');
+        if (spacer) spacer.remove();
+
+        // Apply margin-right to wrapper (if created)
+        const pageWrapper = createPageWrapper();
+        if (pageWrapper) {
+        pageWrapper.style.transform = 'translateX(440px)'; // Move the page content to the left by sidebar width
+        pageWrapper.style.width = 'calc(100% - 440px)'; // Move the page content to the left by sidebar width
+        }
+    }
+    }
+
     // Create a full-page wrapper to shift content when sidebar is visible
     function createPageWrapper() {
         const body = document.querySelector('body');
@@ -32,8 +82,10 @@
     function adjustPageWrapperLayout(showSidebar) {
         const pageWrapper = document.getElementById('page-wrapper');
         if (showSidebar) {
+            if (!isPortrait()) {
             pageWrapper.style.transform = 'translateX(440px)'; // Move the page content to the left by sidebar width
             pageWrapper.style.width = 'calc(100% - 440px)'; // Move the page content to the left by sidebar width
+            } else {}
         } else {
             pageWrapper.style.transform = ''; // Reset position when sidebar is hidden
             pageWrapper.style.width = '100%';
@@ -162,25 +214,55 @@
         if (sidebar) {
             sidebar.innerHTML = '';
         } else {
-            sidebar = document.createElement('div');
-            sidebar.id = 'transcriptSidebar';
-            sidebar.style.position = 'fixed';
-            sidebar.style.top = '-11px';
-            sidebar.style.left = '0';
-            sidebar.style.width = '440px';
-            sidebar.style.height = '100%';
-            sidebar.style.overflowY = 'auto';
-            sidebar.style.backgroundColor = '#fff';
-            sidebar.style.borderLeft = '1px solid #ccc';
-            sidebar.style.padding = '20px';
-            sidebar.style.zIndex = 9999;
-            sidebar.style.fontFamily = 'NotoSans, sans-serif';
-            sidebar.style.fontSize = '16px';
-            sidebar.style.display = 'none';
-            document.body.appendChild(sidebar);
+            if (isPortrait()) {
+                sidebar = document.createElement('div');
+                sidebar.id = 'transcriptSidebar';
+                sidebar.style.position = 'fixed';
+                sidebar.style.bottom = '0';
+                sidebar.style.left = '0';
+                sidebar.style.width = '100%';
+                sidebar.style.height = '50%';
+                sidebar.style.overflowY = 'auto';
+                sidebar.style.backgroundColor = '#fff';
+                sidebar.style.borderLeft = '1px solid #ccc';
+                sidebar.style.padding = '20px';
+                sidebar.style.zIndex = 9999;
+                sidebar.style.fontFamily = 'NotoSans, sans-serif';
+                sidebar.style.fontSize = '16px';
+                sidebar.style.display = 'none';
+                document.body.appendChild(sidebar);
+            
+                // Add content scroll spacer at bottom
+                let spacer = document.getElementById('content-bottom-spacer');
+                if (!spacer) {
+                  spacer = document.createElement('div');
+                  spacer.id = 'content-bottom-spacer';
+                  spacer.style.height = '500px';
+                  document.body.appendChild(spacer);
+                }
+              } else {
+                // Landscape mode
+                sidebar = document.createElement('div');
+                sidebar.id = 'transcriptSidebar';
+                sidebar.style.position = 'fixed';
+                sidebar.style.top = '-11px';
+                sidebar.style.left = '0';
+                sidebar.style.width = '400px';
+                sidebar.style.height = '100%';
+                sidebar.style.overflowY = 'auto';
+                sidebar.style.backgroundColor = '#fff';
+                sidebar.style.borderLeft = '1px solid #ccc';
+                sidebar.style.padding = '20px';
+                sidebar.style.zIndex = 9999;
+                sidebar.style.fontFamily = 'NotoSans, sans-serif';
+                sidebar.style.fontSize = '16px';
+                sidebar.style.display = 'none';
+                document.body.appendChild(sidebar);
+              }
         }
 
         const controls = document.createElement('div');
+        controls.id = 'transcriptSidebarControls';
         controls.style.cssText = 'position: sticky; top: -9px; z-index: 1000; display: flex; gap: 8px; align-items: center; padding-bottom: 10px; padding-top: 10px; background-color: #fff'
 
         const searchBox = document.createElement('input');
@@ -243,6 +325,8 @@
         searchBox.insertAdjacentElement('afterend', resultsCount); // Insert after the search box
 
         sidebar.appendChild(controls);
+
+        monitorOrientation();
 
         // Process VTT and group lines into natural paragraphs
         let currentParagraph = document.createElement('div');
@@ -440,7 +524,7 @@
         toggleButton.textContent = 'Show Transcript';
         toggleButton.style.position = 'fixed';
         toggleButton.classList.add('primaryButton');
-        toggleButton.style.top = '11px';
+        toggleButton.style.bottom = '11px';
         toggleButton.style.left = '28px';
         toggleButton.style.zIndex = '9999';
         toggleButton.style.color = 'white';
@@ -496,6 +580,12 @@
 
     // Add an event listener to the window object that listens for the hashchange event
     window.addEventListener('hashchange', reinitialize);
+
+    // Listen for orientation change events and update sidebar layout
+    window.addEventListener('orientationchange', monitorOrientation);
+
+    // Listen for window resize events and update sidebar layout
+    window.addEventListener('resize', monitorOrientation);
 
     function reinitialize() {
         // Reset variables and remove old elements
