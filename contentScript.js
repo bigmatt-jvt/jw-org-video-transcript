@@ -289,7 +289,7 @@
         searchBox.oninput = () => resetSearch(searchBox.value);
 
         const prevButton = document.createElement('button');
-        prevButton.textContent = 'Prev';
+        prevButton.textContent = '<';
         prevButton.style.padding = '8px';
         prevButton.style.backgroundColor = '#fff';
         prevButton.classList.add('secondaryButton');
@@ -297,7 +297,7 @@
         prevButton.title = 'Go to the previous match in the transcript';
 
         const nextButton = document.createElement('button');
-        nextButton.textContent = 'Next';
+        nextButton.textContent = '>';
         nextButton.style.padding = '8px';
         nextButton.style.backgroundColor = '#fff';
         nextButton.classList.add('secondaryButton');
@@ -305,7 +305,7 @@
         nextButton.title = 'Go to the next match in the transcript';
 
         const closeButton = document.createElement('button');
-        closeButton.textContent = 'Close';
+        closeButton.textContent = 'X';
         closeButton.style.padding = '8px';
         closeButton.classList.add('primaryButton');
         closeButton.style.color = 'white';
@@ -334,7 +334,7 @@
         controls.appendChild(closeButton);
 
         const resultsCount = document.createElement('span');
-        resultsCount.style.cssText = 'display: block; position: absolute; margin-left: 7px; width: 170px; text-align: right; font-size: 8px; margin-top: 20px;'
+        resultsCount.style.cssText = 'display: block; position: absolute; right: 202px; text-align: right; font-size: 8px; bottom: 19px;'
         searchBox.insertAdjacentElement('afterend', resultsCount); // Insert after the search box
 
         sidebar.appendChild(controls);
