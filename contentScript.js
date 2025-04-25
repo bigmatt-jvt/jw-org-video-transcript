@@ -280,7 +280,9 @@
 
         const searchBox = document.createElement('input');
         searchBox.type = 'text';
-        searchBox.placeholder = 'Search transcript...';
+        let PageSearchInputElement = document.querySelector('.siteSearchKeywords'); // Select the page search input element by its class name
+        let placeholderValue = PageSearchInputElement ? PageSearchInputElement.getAttribute('placeholder') : null; // Get the placeholder attribute value
+        searchBox.placeholder = placeholderValue;
         searchBox.style.flex = '1';
         searchBox.style.padding = '8px';
         searchBox.classList.add('siteSearchKeywords');
@@ -534,18 +536,63 @@
     function createToggleButton() {
         toggleButton = document.createElement('button');
         toggleButton.id = 'toggleButton';
-        toggleButton.textContent = 'Show Transcript';
+        //toggleButton.textContent = 'Show Transcript';
+        toggleButton.placeholder = 'Show Transcript';
         toggleButton.style.position = 'fixed';
         toggleButton.classList.add('primaryButton');
         toggleButton.style.bottom = '11px';
         toggleButton.style.left = '28px';
         toggleButton.style.zIndex = '9999';
         toggleButton.style.color = 'white';
-        toggleButton.style.padding = '8px';
+        //toggleButton.style.padding = '8px';
         toggleButton.style.cursor = 'pointer';
         toggleButton.style.display = 'block';
         toggleButton.style.fontFamily = 'NotoSans, sans-serif';
         toggleButton.style.fontSize = '16px';
+
+        // SVG setup
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('width', '45');
+        svg.setAttribute('height', '45');
+        svg.setAttribute('xmlns', svgNS);
+        svg.setAttribute('xmlns:svg', svgNS);
+        svg.setAttribute('enable-background', 'new 0 0 316 431');
+        svg.setAttribute('version', '1.1');
+        svg.setAttribute('xml:space', 'preserve');
+
+        const gLayer = document.createElementNS(svgNS, 'g');
+        gLayer.setAttribute('class', 'layer');
+
+        const gMain = document.createElementNS(svgNS, 'g');
+        gMain.setAttribute('id', 'svg_14');
+        gMain.setAttribute('transform', 'translate(0, 0.25) translate(0, 0.25) translate(0, 0.25) translate(0, 0.25) translate(0, 0.25) translate(-0.25) matrix(0.0825655, 0, 0, 0.0825655, 15.0027, 10.7365)');
+
+        const paths = [
+            { d: "m151.53,-67c1.31,1.35 1.94,2.92 3.03,4.02c33.78,33.85 67.62,67.64 101.35,101.55c1.54,1.55 2.95,4.1 2.96,6.19c0.17,44.49 0.13,88.98 0.12,133.47c0,0.83 -0.07,1.65 -0.18,3.69c-6.14,-4.56 -11.71,-8.7 -17.81,-13.23c0,-37.12 0,-75.09 0,-113.45c-34.56,0 -68.96,0 -103.76,0c0,-35.13 0,-69.86 0,-104.92c-55.45,0 -110.52,0 -165.91,0c0,122.87 0,245.93 0,369.68c1.5,0 3.25,0 5,0c62.15,0 124.31,0.05 186.46,-0.09c5.26,-0.01 9.61,0.77 13.97,4.18c5.79,4.53 12.4,8.01 18.64,11.97c0.51,0.32 0.91,0.8 2.17,1.94c-81.57,0 -162.1,0 -243.1,0c-0.47,-134.9 -0.47,-269.8 -0.47,-405c65.69,0 131.37,0 197.53,0m66.88,104c3.07,0 6.14,0 10.3,0c-23.8,-23.74 -46.76,-46.66 -69.78,-69.52c-0.86,-0.85 -2.27,-1.14 -3.67,-1.81c0,24.21 0,47.64 0,71.33c20.9,0 41.54,0 63.15,0z", id: "svg_2" },
+            { d: "m159.47,364c-0.47,-3.81 -0.47,-7.62 -0.47,-11.82c16.27,0 32.35,0 48.71,0c0,-9.13 0,-17.88 0,-26.95c-9.16,-2.05 -17.66,-5.57 -25.21,-11.88c-9.03,-7.57 -14.88,-17.01 -16.2,-28.21c-1.35,-11.38 -0.3,-23.05 -0.3,-34.87c2.99,0 6.72,0 11,0c0,6.41 0.02,12.85 0,19.29c-0.03,9 0.94,17.78 6.01,25.58c6.85,10.5 16.12,16.74 28.96,17.98c11.58,1.12 20.95,-3.47 28.84,-10.74c7.17,-6.6 10.76,-15.67 11.12,-25.55c0.33,-8.78 0.07,-17.58 0.07,-26.6c4.07,0 7.8,0 12.12,0c-1.04,14.44 2.31,29.07 -3.16,43.04c-6.39,16.31 -18.14,26.74 -35.36,30.75c-1.41,0.32 -2.77,0.83 -4.4,1.33c0,8.58 0,17.35 0,26.65c16,0 31.93,0 48.33,0c0.47,3.99 0.47,7.97 0.47,12c-36.69,0 -73.38,0 -110.53,0z", id: "svg_3" },
+            { d: "m189.18,295.67c-5.9,-7.2 -6.97,-15.61 -7.08,-23.99c-0.3,-21.65 -0.32,-43.3 0.01,-64.94c0.13,-8.2 1.26,-16.29 6.71,-23.33c5.46,-7.03 12.12,-11.09 20.89,-12.48c14.16,-2.25 25.05,3.03 32.11,14.82c3.15,5.26 4.81,12.13 4.95,18.32c0.56,23.63 0.57,47.29 0.12,70.93c-0.33,16.79 -8.98,28.58 -25.54,32.57c-10.06,2.43 -20.11,-0.02 -28.03,-7.76c-1.31,-1.28 -2.6,-2.57 -4.14,-4.14m16.67,-1.68c7.24,3.49 14.24,2.72 20.5,-2.02c4.4,-3.33 7.34,-7.84 7.63,-14.18c-5.99,0 -11.4,0 -16.68,0c0,-4.14 0,-7.88 0,-11.99c5.72,0 11.13,0 16.4,0c0,-3.48 0,-6.55 0,-10c-5.71,0 -11.12,0 -16.4,0c0,-4.14 0,-7.88 0,-11.99c5.7,0 11.11,0 16.41,0c0,-3.47 0,-6.54 0,-9.99c-5.7,0 -11.11,0 -16.42,0c0,-4.14 0,-7.88 0,-12c5.7,0 11.11,0 16.43,0c0,-3.13 0,-5.87 0,-8.98c-5.69,0 -11.11,0 -16.44,0c0,-4.15 0,-7.88 0,-11.94c5.72,0 11.16,0 16.57,0c0.37,-9.23 -9.1,-18.6 -20.63,-18.13c-9.56,0.39 -18.2,10.21 -18.21,18.82c-0.03,23.64 0.23,47.28 -0.13,70.92c-0.14,9.11 2.56,16.17 10.97,21.48z", id: "svg_4" },
+            { d: "m55,141c51.81,0 103.11,0 154.71,0c0,5.94 0,11.68 0,17.71c-68.66,0 -137.4,0 -206.42,0c0,-5.65 0,-11.39 0,-17.71c17.02,0 34.11,0 51.71,0z", id: "svg_5" },
+            { d: "m20,119c-5.81,0 -11.12,0 -16.71,0c0,-5.62 0,-11.02 0,-16.72c68.67,0 137.4,0 206.42,0c0,5.34 0,10.75 0,16.72c-63.03,0 -126.12,0 -189.71,0z", id: "svg_6" },
+            { d: "m67,199c-21.47,0 -42.45,0 -63.71,0c0,-5.94 0,-11.68 0,-17.71c55.34,0 110.75,0 166.37,0c-2.67,5.46 -5.2,11.13 -8.26,16.51c-0.57,1.01 -3.23,1.15 -4.92,1.15c-29.66,0.07 -59.32,0.05 -89.48,0.05z", id: "svg_7" },
+            { d: "m10.07,239c-2.48,0 -4.46,0 -6.76,0c0,-5.9 0,-11.64 0,-17.69c51.27,0 102.67,0 154.38,0c0,5.59 0,11.34 0,17.69c-48.96,0 -98.04,0 -147.62,0z", id: "svg_8" },
+            { d: "m116,278c-37.81,0 -75.11,0 -112.71,0c0,-5.61 0,-11.02 0,-16.71c51.33,0 102.73,0 154.42,0c0,5.32 0,10.73 0,16.71c-13.68,0 -27.45,0 -41.71,0z", id: "svg_9" },
+            { d: "m105,67.1c0,4.46 0,8.43 0,12.65c-34.02,0 -67.76,0 -101.75,0c0,-5.77 0,-11.51 0,-17.5c33.78,0 67.51,0 101.75,0c0,1.48 0,2.92 0,4.85z", id: "svg_10" },
+            { d: "m251.29,324.21c2.19,-1.73 4.12,-3.21 6.31,-4.89c0,6.08 0,12.17 0,18.47c-8.68,0 -17.38,0 -26.42,0c6.77,-4.55 13.31,-8.94 20.11,-13.58z", id: "svg_11" },
+        ];
+
+        for (const { d, id } of paths) {
+            const path = document.createElementNS(svgNS, 'path');
+            path.setAttribute('d', d);
+            path.setAttribute('fill', '#FFFFFF');
+            path.setAttribute('id', id);
+            path.setAttribute('opacity', '1');
+            gMain.appendChild(path);
+        }
+
+        gLayer.appendChild(gMain);
+        svg.appendChild(gLayer);
+        toggleButton.appendChild(svg);
 
         toggleButton.onclick = () => {
             toggleSidebar();
